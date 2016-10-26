@@ -1,0 +1,29 @@
+{
+  "name": "slackbot",
+  "version": "1.0.0",
+  "description": "slackbot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hakanmhmd/slackbot.git"
+  },
+  "keywords": [
+    "bot",
+    "slack",
+    "wit"
+  ],
+  "author": "Hakan Mehmed",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hakanmhmd/slackbot/issues"
+  },
+  "homepage": "https://github.com/hakanmhmd/slackbot#readme",
+  "dependencies": {
+    "botkit": "^0.4.0",
+    "witbot": "^2.1.0"
+  }
+}

@@ -24,6 +24,9 @@
   "homepage": "https://github.com/hakanmhmd/slackbot#readme",
   "dependencies": {
     "botkit": "^0.4.0",
+    "botkit-middleware-witai": "0.0.2",
+    "futures": "^2.3.3",
+    "node-wit": "^4.1.0",
     "witbot": "^2.1.0"
   }
 }

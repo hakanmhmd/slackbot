@@ -1,10 +1,17 @@
 
 var Botkit = require('botkit')
 var config = require('./config')
-console.log(config)
+
 var slack_token = config.SLACK_TOKEN
 var wit_token = config.WIT_TOKEN
 
+//var wit = require('botkit-middleware-witai')({
+//    token: wit_token
+//})
+
+var Witbot = require('witbot')
+var witbot = Witbot(wit_token)
+var wit_req = require('./wit');
 
 var controller = Botkit.slackbot({
   // reconnect to Slack RTM when connection goes bad
@@ -32,7 +39,7 @@ controller.on('bot_channel_join', function (bot, message) {
   bot.reply(message, "I'm here!")
 })
 
-controller.hears(['hello', 'hi'], ['direct_mention', 'direct_message'], function (bot, message) {
+/**controller.hears(['hello', 'hi'], ['direct_mention', 'direct_message'], function (bot, message) {
   bot.reply(message, 'Hello.')
 })
 
@@ -51,24 +58,50 @@ controller.hears('help', ['direct_message', 'direct_mention'], function (bot, me
 })
 
 controller.hears(['attachment'], ['direct_message', 'direct_mention'], function (bot, message) {
-  var text = 'OCADO BOT.'
-  var attachments = [{
-    fallback: text,
-    pretext: 'Best online supermarket. :sunglasses: :thumbsup:',
-    title: 'Ocado',
-    image_url: 'http://www.ocadogroup.com/~/media/Images/O/Ocado-Group/image-gallery/ocado-logos/large-images/ocado-the-online%20supermarket.jpg',
-    title_link: 'http://ocado.com/',
-    text: text,
-    color: '#39e600'
-  }]
-
-  bot.reply(message, {
-    attachments: attachments
-  }, function (err, resp) {
-    console.log(err, resp)
-  })
+  
 })
 
 controller.hears('.*', ['direct_message', 'direct_mention'], function (bot, message) {
   bot.reply(message, 'Sorry <@' + message.user + '>, I don\'t understand. \n')
+})
+**/
+
+controller.hears('.*', 'direct_message,direct_mention', function (bot, message) {
+  var wit = witbot.process(message.text, bot, message)
+  //console.log(message.text)
+  var wit_request = wit_req.request_wit(message.text);
+  wit_request.when(function (err, wit) {
+        //res.end(JSON.stringify(wit));
+        if (err) console.log(err);//Manage Error here
+        var outcome = wit.outcomes[0];
+        var intent = outcome.entities.intent[0].value;
+        //console.log(intent)
+        switch(intent){
+          case 'greeting':
+              bot.reply(message, 'Hello to you too.')
+              break
+          case 'status':
+              var text = 'OCADO BOT.'
+              var attachments = [{
+                fallback: text,
+                pretext: 'Best online supermarket. :sunglasses: :thumbsup:',
+                title: 'Ocado',
+                image_url: 'http://www.ocadogroup.com/~/media/Images/O/Ocado-Group/image-gallery/ocado-logos/large-images/ocado-the-online%20supermarket.jpg',
+                title_link: 'http://ocado.com/',
+                text: text,
+                color: '#39e600'
+              }]
+
+              bot.reply(message, {
+                attachments: attachments
+              }, function (error, resp) {
+                console.log(error, resp)
+              })
+              break
+          default:
+              bot.reply(message, 'I do not understand what you mean')
+              break
+        }
+  })
+  
 })

@@ -1,9 +1,8 @@
-
 var Botkit = require('botkit')
-var config = require('./config')
+//var config = require('./config')
 
-var slack_token = config.SLACK_TOKEN
-var wit_token = config.WIT_TOKEN
+var slack_token = process.env.SLACK_TOKEN
+var wit_token = process.env.WIT_TOKEN
 
 //var wit = require('botkit-middleware-witai')({
 //    token: wit_token

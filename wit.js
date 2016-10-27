@@ -1,13 +1,13 @@
 var https = require('https')
 var Future = require('futures').future
-var config = require('./config')
+//var config = require('./config')
 
 var request_wit = function(user_text) {
     var future = Future.create();
     var options = {
         host: 'api.wit.ai',
         path: '/message?n=1&q=' + encodeURIComponent(user_text),
-        headers: {'Authorization': 'Bearer ' + config.WIT_TOKEN,
+        headers: {'Authorization': 'Bearer ' + process.env.WIT_TOKEN,
                   'Accept': 'application/vnd.wit.20140620'}
     };
     https.request(options, function(res) {

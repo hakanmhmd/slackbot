@@ -1,7 +1,12 @@
 # Slack bot using wit.ai
 
-config.js
----------
+## Usage
+
+### Run locally
+npm install
+npm start
+
+### Config.js
 ``` javascript
 module.exports = {
 	SLACK_TOKEN : <your-slack-token>,

@@ -1,0 +1,7 @@
+name: wit ai slack bot
+descprtion: Slack bot using WIT.AI for NLP
+config:
+  - name: WIT_TOKEN
+    friendly_name: The WIT.AI access token
+  - name: SLACK_TOKEN
+    friendly_name: The Slack acess token

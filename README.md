@@ -3,8 +3,8 @@
 ## Usage
 
 ### Run locally
-npm install
-npm start
+	npm install
+	npm start
 
 ### Config.js
 ``` javascript

@@ -7,10 +7,6 @@ var request_wit = function(user_text) {
     var options = {
         host: 'api.wit.ai',
         path: '/message?n=1&q=' + encodeURIComponent(user_text),
-        //This is the Authorization header added to access your Wit account
-        //This access token is protected for security reason,
-        //in the demo this access token was equals to FSN2DG6YY64JD2T6WG5D6NVIXWU2F2QK
-        //Make sure you replace it with your own or it won't work
         headers: {'Authorization': 'Bearer ' + config.WIT_TOKEN,
                   'Accept': 'application/vnd.wit.20140620'}
     };

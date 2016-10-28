@@ -42,17 +42,21 @@ controller.hears('.*', 'direct_message,direct_mention', function (bot, message) 
   //console.log(message.text)
   var wit_request = wit_req.request_wit(message.text);
   wit_request.when(function (err, wit) {
-        //res.end(JSON.stringify(wit));
-        if (err) console.log(err);//Manage Error here
-        var outcome = wit.outcomes[0];
-        var intent = outcome.entities.intent[0].value;
-        //console.log(intent)
-        switch(intent){
-          case 'greeting':
-              bot.reply(message, 'Hello to you too.')
+        if (err) {
+          console.log(err);
+        }
+
+        var outcome = wit.outcomes[0]
+        if(!outcome || !outcome.entities.intent){
+          bot.reply(message, 'I do not know what you mean.')
+        } else {
+          var intent = outcome.entities.intent[0].value
+          switch(intent){
+            case 'greeting':
+              bot.reply(message, 'Hello. How may I help you  <@' + message.user + '>')
               break
-          case 'status':
-              var text = 'OCADO BOT.'
+            case 'id':
+              var text = 'I AM OCADO BOT.'
               var attachments = [{
                 fallback: text,
                 pretext: 'Best online supermarket. :sunglasses: :thumbsup:',
@@ -69,9 +73,13 @@ controller.hears('.*', 'direct_message,direct_mention', function (bot, message) 
                 console.log(error, resp)
               })
               break
-          default:
+            case 'status':
+              bot.reply(message, 'I am ok. Thanks for asking.')
+              break
+            default:
               bot.reply(message, 'I do not understand what you mean')
               break
+          }
         }
   })
   

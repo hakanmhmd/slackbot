@@ -1,4 +1,5 @@
 var Botkit = require('botkit')
+var rssReader = require('feed-read');
 //var config = require('./config')
 
 var slack_token = process.env.SLACK_TOKEN
@@ -35,8 +36,6 @@ controller.on('bot_channel_join', function (bot, message) {
   bot.reply(message, "I'm in!")
 })
 
-
-
 controller.hears('.*', 'direct_message,direct_mention', function (bot, message) {
   var wit = witbot.process(message.text, bot, message)
   //console.log(message.text)
@@ -56,7 +55,7 @@ controller.hears('.*', 'direct_message,direct_mention', function (bot, message) 
               bot.reply(message, 'Hello. How may I help you  <@' + message.user + '>')
               break
             case 'id':
-              var text = 'I AM OCADO BOT.'
+              var text = 'I AM OCADO NEWS BOT.'
               var attachments = [{
                 fallback: text,
                 pretext: 'Best online supermarket. :sunglasses: :thumbsup:',
@@ -76,11 +75,43 @@ controller.hears('.*', 'direct_message,direct_mention', function (bot, message) 
             case 'status':
               bot.reply(message, 'I am ok. Thanks for asking.')
               break
+            case 'news':
+              rssReader("http://feeds.bbci.co.uk/news/rss.xml", function(err, articles) {
+                if (err) {
+                  console.log(err);
+                  bot.reply(message, 'An error has occured!');
+                } else {
+                  if (articles.length > 0) {
+                    bot.reply(message, "How about these?");
+                    generateMessage(articles, bot, message);
+                  } else {
+                    bot.reply(message, "Couldn't find any news for you.");
+                  }
+                }
+              })
+
+              break
             default:
               bot.reply(message, 'I do not understand what you mean')
               break
           }
         }
   })
-  
 })
+
+function generateMessage(data, bot, message){
+    var i;
+    for(i=0; i<10; i++){
+      var attachments = [{
+        title: data[i].title,
+        title_link: data[i].link,
+        text: data[i].content,
+        footer: data[i].published + " " + data[i].feed.name,
+        color: '#36a64f'
+      }]
+
+      bot.reply(message, {
+        attachments: attachments
+      })
+    }
+}

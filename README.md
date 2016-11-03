@@ -4,7 +4,7 @@
 
 ### Run locally
 	npm install
-	npm start
+	SLACK_TOKEN="" WIT_TOKEN="" npm start
 
 ### Config.js
 ``` javascript

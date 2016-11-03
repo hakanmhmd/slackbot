@@ -14,7 +14,6 @@ function Feed(){
 	    } else {
 	      if (articles.length > 0) {
 	      	return callback(null, articles)
-	        //generateMessage(articles, bot, message);
 	      } else {
 	        return callback(new Error('Could not find any news.'))
 	      }

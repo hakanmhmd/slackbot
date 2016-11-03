@@ -1,13 +1,9 @@
 var Botkit = require('botkit')
-//var rssReader = require('feed-read');
 //var config = require('./config')
 
 var slack_token = process.env.SLACK_TOKEN
 var wit_token = process.env.WIT_TOKEN
 
-//var wit = require('botkit-middleware-witai')({
-//    token: wit_token
-//})
 
 var Witbot = require('witbot')
 var witbot = Witbot(wit_token)
@@ -39,7 +35,6 @@ controller.on('bot_channel_join', function (bot, message) {
 
 controller.hears('.*', 'direct_message,direct_mention', function (bot, message) {
   var wit = witbot.process(message.text, bot, message)
-  //console.log(message.text)
   var wit_request = wit_req.request_wit(message.text);
   wit_request.when(function (err, wit) {
         if (err) {

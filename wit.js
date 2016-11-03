@@ -1,6 +1,5 @@
 var https = require('https')
 var Future = require('futures').future
-//var config = require('./config')
 
 var request_wit = function(user_text) {
     var future = Future.create();

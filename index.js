@@ -1,5 +1,5 @@
 var Botkit = require('botkit')
-var rssReader = require('feed-read');
+//var rssReader = require('feed-read');
 //var config = require('./config')
 
 var slack_token = process.env.SLACK_TOKEN
@@ -12,6 +12,7 @@ var wit_token = process.env.WIT_TOKEN
 var Witbot = require('witbot')
 var witbot = Witbot(wit_token)
 var wit_req = require('./wit');
+var news = require('./news')()
 
 var controller = Botkit.slackbot({
   // reconnect to Slack RTM when connection goes bad
@@ -75,18 +76,32 @@ controller.hears('.*', 'direct_message,direct_mention', function (bot, message) 
             case 'status':
               bot.reply(message, 'I am ok. Thanks for asking.')
               break
+            case 'insult':
+              bot.reply(message, 'That is not vert nice. Talk to me when you have fixed your attitude.')
+              break
             case 'news':
-              rssReader("http://feeds.bbci.co.uk/news/rss.xml", function(err, articles) {
-                if (err) {
-                  console.log(err);
-                  bot.reply(message, 'An error has occured!');
-                } else {
-                  if (articles.length > 0) {
-                    bot.reply(message, "How about these?");
-                    generateMessage(articles, bot, message);
-                  } else {
-                    bot.reply(message, "Couldn't find any news for you.");
-                  }
+              var feed_url = "http://feeds.bbci.co.uk/news/rss.xml"
+              console.log(news)
+              news.getArticles(feed_url, function(error, data) {
+                if(error){
+                  console.log(error)
+                  bot.reply(message, 'Unexpected error occured! Sorry.')
+                  return
+                }
+                // news articles received - generate the attachments
+                var i;
+                for(i=0; i<10; i++){
+                  var attachments = [{
+                    title: data[i].title,
+                    title_link: data[i].link,
+                    text: data[i].content,
+                    footer: data[i].published + " " + data[i].feed.name,
+                    color: '#36a64f'
+                  }]
+
+                  bot.reply(message, {
+                    attachments: attachments
+                  })
                 }
               })
 
@@ -98,20 +113,3 @@ controller.hears('.*', 'direct_message,direct_mention', function (bot, message) 
         }
   })
 })
-
-function generateMessage(data, bot, message){
-    var i;
-    for(i=0; i<10; i++){
-      var attachments = [{
-        title: data[i].title,
-        title_link: data[i].link,
-        text: data[i].content,
-        footer: data[i].published + " " + data[i].feed.name,
-        color: '#36a64f'
-      }]
-
-      bot.reply(message, {
-        attachments: attachments
-      })
-    }
-}
